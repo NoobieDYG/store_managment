@@ -1,8 +1,7 @@
-import mysql.connector
-
-def get_all():
-    con_obj=mysql.connector.connect(user='root', password='1234',host='127.0.0.1',database='store')
-    cursor=con_obj.cursor()
+from mysql_connector import sql_con_obj
+def get_all(connection):
+    
+    cursor=connection.cursor()
     query='SELECT products.product_id,products.product_name,products.um_id,products.price_per_unit,um.um_name from products inner join um on products.um_id=um.um_id'
     cursor.execute(query)
     response=[]
@@ -21,4 +20,5 @@ def get_all():
     con_obj.close()
 
 if __name__=='__main__':
-    print(get_all())
+    connection=sql_con_obj()
+    print(get_all(connection))
