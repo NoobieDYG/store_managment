@@ -20,7 +20,7 @@ def get_product():
     
     products=python_doa.get_all(con_obj)
     response=jsonify(products)
-    #response.headers.add('Access-Control-Allow-Origin','*')
+    response.headers.add('Access-Control-Allow-Origin','*')
     return response
 
 
