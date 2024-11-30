@@ -3,3 +3,4 @@
 
 # Ignore the __pycache__ directory inside the backend folder
 backend/__pycache__/
+venv/
