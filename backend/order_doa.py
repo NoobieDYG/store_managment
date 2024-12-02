@@ -24,6 +24,7 @@ def insert_order(connection,order):
 
 
     connection.commit()
+    cursor.close()
     return order_id
 
 def get_all_orders(connection):
@@ -38,25 +39,27 @@ def get_all_orders(connection):
             'total':total,
             'date_time':date_time
         })
-    
+    cursor.close()
     return response
-def get_order_details(connection,order_id):
+def get_order_details(connection):
     cursor=connection.cursor()
 
-    query='select order_details.order_id,order_details.quantity,order_details.total_price,products.product_name,products.price_per_unit from order_details left join prodcuts on order_details.product_id=prodcuts.product_id where order_details.order_id=%s'
-    data=(order_id,)
-    cursor.execute(query,data)
+    query='SELECT order_details.order_id,products.product_name,order_details.quantity,products.price_per_unit,order_details.total_price FROM order_details LEFT JOIN products ON order_details.product_id = products.product_id;' #where order_details.order_id=%s
+    #data=(order_id,)
+    cursor.execute(query)
+    data=cursor.fetchall()
     records=[]
-    for(order_id,quantity,total_price,product_name,price_per_unit) in cursor:
+    for(order_id, product_name, quantity, price_per_unit, total_price) in data:
         records.append({
-            'order_id':order_id,
-            'quantity':quantity,
-            'total_price':total_price,
-            'product_name':product_name,
-            'price_per_unit':price_per_unit
+            'order_id': order_id,
+            'product_name': product_name,
+            'quantity': quantity,
+            'price_per_unit': price_per_unit,
+            'total_price': total_price
         })
-
-    return records
+    #print(records)
+    cursor.close()
+    return (records)
 
 
 if __name__=='__main__':

@@ -5,8 +5,9 @@ def get_all(connection):
     cursor=connection.cursor()
     query='SELECT products.product_id,products.product_name,products.um_id,products.price_per_unit,um.um_name from products inner join um on products.um_id=um.um_id'
     cursor.execute(query)
+    data=cursor.fetchall()
     response=[]
-    for (product_id,product_name,um_id,price_per_unit,um_name) in cursor:
+    for (product_id,product_name,um_id,price_per_unit,um_name) in data:
         response.append(
             {
                 'product_id':product_id,
@@ -17,6 +18,7 @@ def get_all(connection):
 
             }
         )
+    cursor.close()
     return response
     con_obj.close()
 def add_product(connection,product):
@@ -25,6 +27,7 @@ def add_product(connection,product):
     data=(product['product_name'],product['um_id'],product['price_per_unit'])
     cursor.execute(query,data)
     connection.commit()
+    cursor.close()
     return cursor.lastrowid
 
 
@@ -33,7 +36,7 @@ def delete_product(connection, product_id):
     query = ("DELETE FROM products where product_id=" + str(product_id))
     cursor.execute(query)
     connection.commit()
-
+    cursor.close()
     return cursor.lastrowid
 
 

@@ -8,6 +8,8 @@ def sql_con_obj():
   global __cnx
 
   if __cnx is None:
-    __cnx = mysql.connector.connect(user='root', password='1234',host = '127.0.0.1', database='store')
+    __cnx = mysql.connector.connect(user='root', password='1234',host = '127.0.0.1', database='store',auth_plugin='caching_sha2_password')
 
   return __cnx
+
+sql_con_obj()

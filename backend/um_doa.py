@@ -9,6 +9,7 @@ def get_um(connection):
             'um_id':um_id,
             'um_name':um_name
         })
+    cursor.close()
     return response
 if __name__=='__main__':
 

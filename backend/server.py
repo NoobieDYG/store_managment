@@ -1,20 +1,29 @@
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify,render_template
+from flask_cors import CORS
 import python_doa
 import mysql_connector
 import order_doa
 import um_doa
 import json
-app=Flask(__name__)
+app=Flask(__name__,static_folder="C:\\Users\\Affaan Jaweed\\Desktop\\sotre\\frontend\\static",template_folder="C:\\Users\\Affaan Jaweed\\Desktop\\sotre\\frontend")
+CORS(app)
 
 con_obj=mysql_connector.sql_con_obj()
-@app.route('/hello')
+@app.route('/index')
 def hello():
-    return "hello, how is you the"
+    return render_template('index.html')
 
+@app.route('/orders')
+def showorders():
+    return render_template('orders.html')
+
+@app.route('/products')
+def showprodcuts():
+    return render_template('products.html')
 
 @app.route('/')
 def index():
-    return 'welcome to store managment system'
+    return 'welcome to store managment system, type /index to view home page'
 
 
 @app.route('/getProduct', methods=['GET'])
@@ -57,7 +66,8 @@ def insert_product():
 
 @app.route('/insertorder',methods=['POST'])
 def insert_order():
-    insertion=order_doa.insert_order(con_obj,json.loads(request.form['data']))
+    order_data=request.get_json()
+    insertion=order_doa.insert_order(con_obj,(order_data['data']))
     response=jsonify({
         'order_id':insertion
     })
@@ -72,12 +82,12 @@ def get_all_orders():
     response.headers.add('Access-Control-Allow-Origin','*')
     return response
 
-@app.route('/getorderdetail/<int:order_id>',methods=['GET'])
-def get_order_details(order_id):
-    order_detail=order_doa.get_order_details(con_obj,order_id)
+@app.route('/getorderdetail',methods=['GET'])
+def get_order_details():
+    order_detail=order_doa.get_order_details(con_obj)
     response=jsonify(order_detail)
     return response
 
 if __name__=='__main__':
     print("Starting python flask server for store managment")
-    app.run(port=5000)
+    app.run(port=5000,debug=True)
